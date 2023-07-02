@@ -1,0 +1,68 @@
+│   
+├───.misc
+│   ├───KB_microservice
+│   ├───Compression
+
+
+
+
+    ├───mySystem
+    │   │   mySystem_interface
+    │   │
+    │   └───mySystem_plugins
+    │       │
+    │       ├───self_improve_og
+    │       │       self_improvement
+    │       │
+    │       └───system_cleaner
+    │               space_cleaner.py
+
+
+
+    ├───query
+    │   │   query_interface
+    │   │
+    │   └───query_plugins
+    │       ├───query_chains
+    │       │       context.txt
+    │       │       f0_ui_terminal.py
+    │       │       f1_pilot.py
+    │       │       f2_handbook_management.py
+    │       │       f3_memory_management.py
+    │       │       f4_trajectory_and_actions
+    │       │       f5_gpt_interpreter
+    │       │       f6_user_interaction
+    │       │       f7_terminal_execution
+    │       │       handbook
+    │       │       history
+    │       │       logger
+    │       │       memory
+    │       │       run_ui_terminal
+    │       │
+    │       └───query_library
+
+
+
+    ├───converse
+    │   │   converse_interface
+    │   │
+    │   └───converse_plugins
+    │       │   conve_gpt
+    │       │
+    │       └───converse_library
+
+
+    ├───projects
+    │   │   projects_interface
+    │   │
+    │   ├───projects_plugins
+    │   │   │
+    │   │   ├───projects_library
+    │   │   └───VectorDB Memory
+    │   │       │   constants
+    │   │       │   ingest
+    │   │       │   thalis
+    │   │       │   todolist
+    │   │       │
+    │   │       ├───source_documents
+    │   │       └───Thalis_Database

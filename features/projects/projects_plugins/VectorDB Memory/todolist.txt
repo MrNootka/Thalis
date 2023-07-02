@@ -1,0 +1,8 @@
+- Make an initial setup gui
+- Make streamlit
+- Make it able to read its code automated
+- Check superAGI
+- check autogpt
+- check langchain concepts
+- implement WinHTT
+- email lex fridman
