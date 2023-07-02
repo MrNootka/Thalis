@@ -3,7 +3,7 @@ import os
 import openai
 import pathlib
 from dotenv import load_dotenv
-
+ 
 load_dotenv()
 
 class GPTInterpreter:
