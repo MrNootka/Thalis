@@ -5,8 +5,8 @@ import subprocess
 import uuid
 import sys
 import os
+from features.mySystem.mySystem_interface import MySystemInterface
 
-from features.projects.projects_interface import ProjectTab
 class SessionManager:
     def __init__(self):
         self.sessions = {}
@@ -29,6 +29,8 @@ def close_tab(tab_control, index):
     tab_control.forget(frame)
 
 
+
+
 def create_tab(tab_control, session_manager, feature):
     tab = Frame(tab_control)
     tab_control.add(tab, text=feature)
@@ -37,17 +39,19 @@ def create_tab(tab_control, session_manager, feature):
     close_button = Button(tab, text='X', command=lambda: close_tab(tab_control, tab_control.index(tab)))
     close_button.pack(anchor="nw")  # changed from 'ne' to 'nw'
 
-    if feature == "Query":
+    if feature == "mySystem":
+        MySystemInterface(tab).pack(fill='both', expand=True)
+    else:
         txt = Text(tab)
-        txt.insert('1.0', "Output of Query")
-    elif feature == "mySystem":
-        txt = Text(tab)
-        txt.insert('1.0', "Output of mySystem")
-    elif feature == "Converse":
-        txt = Text(tab)
-        txt.insert('1.0', "Output of Converse")
-    elif feature == "Project":
-        project_tab = ProjectTab(tab)
+        
+        if feature == "Query":
+            txt.insert('1.0', "Output of Query")
+        elif feature == "Converse":
+            txt.insert('1.0', "Output of Converse")
+        elif feature == "Project":
+            txt.insert('1.0', "Output of Converse")
+
+        txt.pack(fill='both', expand=True)  # pack
 
 
 
@@ -60,10 +64,6 @@ def main():
 
     button_frame = Frame(root)
     button_frame.pack(pady=20)
-
-    add_button = Button(button_frame,text="Add Widget")
-    add_button.grid(row=0, column=len(FEATURES), sticky='ew')
-    add_button.grid_remove()
 
     tab_control = ttk.Notebook(root)
     tab_control.pack(expand=1, fill="both")
