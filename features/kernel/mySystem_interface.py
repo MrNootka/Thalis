@@ -1,5 +1,5 @@
 from tkinter import Frame, Button, Label
-from .mySystem_plugins.system_cleaner.space_cleaner import clean_space
+from features.kernel.system_cleaner.space_cleaner import clean_space
 
 class MySystemInterface(Frame):
 

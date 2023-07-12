@@ -6,9 +6,9 @@ import subprocess
 import uuid
 import sys
 import os
-from features.mySystem.mySystem_interface import MySystemInterface
+from features.kernel.mySystem_interface import MySystemInterface
 from features.projects.projects_interface import ProjectsInterface
-from features.thalis_aio.aio import AIOInterface   
+from features.advancedTerminal.aio import AIOInterface   
 
 
 class SessionManager:
