@@ -6,6 +6,8 @@ import os
 compiler = Tk()
 compiler.title('Thalis')
 compiler.minsize(width=500,height=700)  
+global frames_list 
+frames_list = []
 
 def center_window():
     screen_width = compiler.winfo_screenwidth()
@@ -16,10 +18,9 @@ def center_window():
 
     compiler.geometry("{}x{}+{}+{}".format(1200, 800, position_right, position_top))
 
-center_window()
 
-global frames_list 
-frames_list = []
+
+
 
 def create_new_frame():
     global frames_list
@@ -58,7 +59,6 @@ def delete_frame(frame):
     frame.destroy()
     frames_list.remove(frame)
 
-    # recalculate frame width after one is removed, with a special case where no frame exists
     new_frame_width = h.winfo_width() // (len(frames_list) if len(frames_list) != 0 else 1)
     for f in frames_list:
         f.config(width=new_frame_width)
@@ -113,9 +113,6 @@ plus_button.bind("<Button-1>", lambda e: create_new_frame())
 h = PanedWindow(compiler, orient=HORIZONTAL)
 h.pack(fill=BOTH, expand=1)
 
-##########  frame
-#theFrame = Frame(h, width=1500, bg="White")
-#h.add(theFrame)
-#h.setnaturalsize()
+center_window()
 compiler.mainloop()
 

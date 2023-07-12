@@ -1,93 +1,62 @@
-from tkinter import Canvas, Entry, Frame, Text, Toplevel, Tk
-import tkinter as tk
-from tkinter.ttk import Button, Style
+from tkinter import Frame, Button, Label, Entry, font
+from features.projects.create_project import CreateProjectForm
 
-class MoveableFrame(Frame):
-    def __init__(self, master=None, **kwargs):
-        super().__init__(master, **kwargs)
-        self.grid_propagate(0)
+class ProjectsInterface(Frame):
+    def __init__(self, parent, tab, tab_control, button_frame):
+        Frame.__init__(self, parent)
+        self.button_frame = button_frame
+        self.tab = tab
+        self.tab_control = tab_control
 
-        self.bind("<ButtonPress-1>", self.start_move)
-        self.bind("<ButtonRelease-1>", self.stop_move)
-        self.bind("<B1-Motion>", self.do_move)
+        self.pack(fill="both", expand=True)
 
-        self.text_widget = Text(self, height=5, width=20)
-        self.text_widget.pack(side="left", fill="both")
-        self.text_widget.bind("<ButtonPress-1>", self.start_move)
-        self.text_widget.bind("<ButtonRelease-1>", self.stop_move)
-        self.text_widget.bind("<B1-Motion>", self.do_move)
-
-        self.close_button = Button(self, text="Close", command=self.close)
-        self.close_button.pack(side="left")
-
-        self.send_button = Button(self, text="Send", command=self.send)  
-        self.send_button.pack(side="left") 
-
-    def start_move(self, event):
-        self.x = event.x
-        self.y = event.y
-
-    def stop_move(self, event):
-        self.x = None
-        self.y = None
-
-    def do_move(self, event):
-        delta_x = event.x - self.x
-        delta_y = event.y - self.y
-        x = self.winfo_x() + delta_x
-        y = self.winfo_y() + delta_y
-        self.place(x=x, y=y)
-
-    def close(self):
-        self.destroy()
-
-    def send(self):  # Renamed pin to send
-        pass
-
-class ProjectTab:
-    def __init__(self, parent):
-        self.parent = parent
-        self.canvas = Canvas(parent)
-        self.canvas.pack(fill="both", expand=True)
+        self.close_button_frame = Frame(self)
+        self.close_button_frame.pack(side='top', fill='x')
         
-        self.style = Style()
-        self.style.configure('Add.TButton', font=('calibri', 11, 'bold'), borderwidth='1') 
+        self.close_button = Button(self.close_button_frame, text='X', command=lambda: self.close_tab(tab_control.index(self.tab)), font=("Arial", 15))
 
-        self.add_button = Button(self.canvas, text="Add Widget", command=self.add_widget, style='Add.TButton')
-        self.add_button.pack(anchor="nw")
+        self.close_button.pack(side='right')
 
-    def add_widget(self):
-        widget = self.create_widget()
-        widget.place(x=100, y=100)
+        self.rest_frame = Frame(self)
+        self.rest_frame.pack(side="top")
 
-    def create_widget(self):
-        text_box = MoveableFrame(self.canvas, width=200, height=100, bg='#1A1C23')
-        text_box.text_widget.delete(1.0, "end")
-        text_box.text_widget.insert(1.0, "Describe the widget")
-        return text_box
+        self.new_project_button = Button(self.rest_frame, text="New project", command=self.new_project, font=("Arial", 15))
+        self.or_label = Label(self.rest_frame, text="OR", font=font.Font(size=25, family="Arial"))
+        self.open_project_button = Button(self.rest_frame, text="Open project", command=self.open_project, font=("Arial", 15))
 
-class MessageInputPopup(Toplevel):
-    def __init__(self, title, callback):
-        super().__init__()
-        self.title(title)
-        self.geometry("+{}+{}".format(self.winfo_screenwidth() // 2, self.winfo_screenheight() // 2))
-        self.callback = callback
-        self.entry = Entry(self)
-        self.entry.pack(side="top", fill="Close")
-        self.entry.bind('<Return>', self.send)
-        self.entry.focus_set()
+        self.new_project_button.grid(row=0, column=0, padx=(20, 10))
+        self.or_label.grid(row=0, column=1)
+        self.open_project_button.grid(row=0, column=2, padx=(10, 20))
 
-    def send(self, event=None):
-        self.callback(self.entry.get())
-        self.destroy()
+        self.create_project_form = CreateProjectForm(self)
+        self.create_project_form.pack(fill='x')
+        self.create_project_form.pack_forget()
 
-def main():
-    root = Tk()
-    root.state('zoomed')
-    button_frame = Frame(root)
-    button_frame.pack(pady=20)
-    ProjectTab(button_frame)
-    root.mainloop()
+    def close_tab(self, tab_index):
+        self.tab_control.forget(tab_index)
+    
+    def hide_buttons(self):  
+        self.new_project_button.grid_remove()
+        self.or_label.grid_remove()
+        self.open_project_button.grid_remove()
+    
+    def show_buttons(self):
+        self.new_project_button.grid()
+        self.or_label.grid()
+        self.open_project_button.grid()
 
-if __name__ == "__main__":
-    main()
+    def new_project(self):  
+        self.hide_buttons()
+        self.create_project_form.pack()
+
+    def open_project(self):
+        print("Open project clicked")
+
+    def display_frame(self, frame_class):
+        new_frame = frame_class(self.container, self)
+        self.current_frame = new_frame
+        self.current_frame.pack(fill='both', expand=True)
+
+    def go_back(self):
+        self.current_frame.destroy()
+        self.display_frame(ProjectsInterface)

@@ -1,0 +1,522 @@
+Folder structure of the source code:
++--Thalis/
+|   +--.env
+|   +--features/
+|   |   +--converse/
+|   |   |   +--features\converse\converse_interface.txt
+|   |   |   +--converse_plugins/
+|   |   |   |   +--features\converse\converse_plugins\conve_gpt.py
+|   |   +--mySystem/
+|   |   |   +--features\mySystem\mySystem_interface.py
+|   |   |   +--mySystem_plugins/
+|   |   |   |   +--craftingTab/
+|   |   |   |   |   +--craftingTab_plugins/
+|   |   |   |   |   |   +--pde_introspection/
+|   |   |   |   |   |   |   +--features\mySystem\mySystem_plugins\craftingTab\craftingTab_plugins\pde_introspection\1_folder_structure.txt
+|   |   |   |   |   |   |   +--features\mySystem\mySystem_plugins\craftingTab\craftingTab_plugins\pde_introspection\2_code.txt
+|   |   |   |   |   |   |   +--features\mySystem\mySystem_plugins\craftingTab\craftingTab_plugins\pde_introspection\3_prompt.txt
+|   |   |   |   |   |   |   +--features\mySystem\mySystem_plugins\craftingTab\craftingTab_plugins\pde_introspection\files_and_prompt.txt
+|   |   |   |   |   |   |   +--features\mySystem\mySystem_plugins\craftingTab\craftingTab_plugins\pde_introspection\gpt_response.txt
+|   |   |   |   |   |   |   +--features\mySystem\mySystem_plugins\craftingTab\craftingTab_plugins\pde_introspection\guided_introspection.py
+|   |   |   |   |   |   +--pde_widgets/
+|   |   |   |   |   +--features\mySystem\mySystem_plugins\craftingTab\PDE - Copy.py
+|   |   |   |   +--self_improve/
+|   |   |   |   |   +--features\mySystem\mySystem_plugins\self_improve\handbook.json
+|   |   |   |   |   +--features\mySystem\mySystem_plugins\self_improve\self_improvement.py
+|   |   |   |   |   +--features\mySystem\mySystem_plugins\self_improve\source-code_labeled.json
+|   |   |   |   +--system_cleaner/
+|   |   |   |   |   +--features\mySystem\mySystem_plugins\system_cleaner\space_cleaner.py
+|   |   +--projects/
+|   |   |   +--features\projects\create_project.py
+|   |   |   +--features\projects\projects_interface.py
+|   |   |   +--features\projects\project_frame.py
+|   |   +--query/
+|   |   |   +--features\query\query_interface.txt
+|   |   |   +--query_plugins/
+|   |   |   |   +--query_core/
+|   |   |   |   |   +--features\query\query_plugins\query_core\context.txt
+|   |   |   |   |   +--features\query\query_plugins\query_core\f0_ui_terminal.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\f1_pilot.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\f2_handbook_management.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\f3_memory_management.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\f4_trajectory_and_actions.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\f5_gpt_interpreter.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\f6_user_interaction.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\f7_terminal_execution.py
+|   |   |   |   |   +--features\query\query_plugins\query_core\handbook.json
+|   |   |   |   |   +--features\query\query_plugins\query_core\history.json
+|   |   |   |   |   +--features\query\query_plugins\query_core\logger.json
+|   |   |   |   |   +--features\query\query_plugins\query_core\memory.json
+|   |   |   |   |   +--features\query\query_plugins\query_core\run_ui_terminal.bat
+|   |   |   |   |   +--features\query\query_plugins\query_core\temp.py
+|   |   +--thalis_aio/
+|   |   |   +--features\thalis_aio\aio.py
+|   +--main.py
+|   +--untitled.py
+
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f0_ui_terminal.py
+==========
+import json
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from core.f1_pilot import start_query
+from features.introspection.guided_introspection import guided_introspection
+from features.converse.conversational_gpt import engage_gpt
+
+
+def ui_terminal():
+    while True:
+        print("\nWelcome to Thalis!")
+        print("Choose an option:")
+        print("1. Query")
+        print("2. Guided introspection")
+        print("3. Converse with GPT")
+        print("4. - Exit")
+
+        while True:  # Add loop
+            try:
+                user_choice = int(input("\nYour choice (Number): "))
+                if user_choice not in [1, 2, 3, 4]:  # Check if input is among the valid choices                   
+                    raise ValueError("Invalid option. Please choose from the available options.")
+                break  # If input is valid, break the loop to proceed.
+            except ValueError as e:
+                print(e)  # Print the error message
+        if user_choice == 1:
+            start_query()
+        elif user_choice == 2:
+            guided_introspection()
+        elif user_choice == 3:
+            engage_gpt()
+        elif user_choice == 4:
+            # Instead of breaking, print a goodbye message and quit the application completely.
+            print("Thank you for using Thalis. Goodbye!")
+            sys.exit()
+
+
+if __name__ == "__main__":
+    ui_terminal()
+
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f1_pilot.py
+==========
+import json
+import sys
+import os
+import json
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+from f3_memory_management import status_memory, read_memory
+from f2_handbook_management import process_handbook
+
+def initialize_system():
+    # \\\ log_process() \\\ #
+    
+    return status_memory()
+
+def log_process():
+    # Log the process in logger.json
+    pass
+
+def start_query():
+    # ------------ user_input = input("\nPlease enter your query: ")
+    print("\nStart query")
+    user_input = "write a poem about flowers and save it in a file called flowers.txt please"
+
+    #~~~~process_handbook(user_input) 
+    
+    #initialize_system()    
+
+    # print("do you want to start a new query or load old memory?")
+    # user_input = input(" type n or m: ")
+
+
+    # if user_input == "n"
+    #   memory(status)="inactive"
+    #   initialize_system()
+    
+
+    # if user_input == "m"
+    #   print("Search for the memory or write the ID of the memory: ")
+    #   print("type search or ID")?
+
+    #   if user_input="search":  
+    #       print("Here is a list of the memories:")  
+    #       print memories with details
+    #       print("submit the ID of the memory you want to load:") 
+    #       load selected memory to memory.json 
+    #       memory(status)="display work"
+    #       initialize_system()
+
+    #   if user_input="ID":
+    #   load selected memory to memory.json     
+    #   memory(status)="display work"
+    #   initialize_system()
+
+
+    # elif:
+    #   print("wrong input, type n or m:")
+    #   user_input = input(" ")
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f2_handbook_management.py
+==========
+import json
+import sys
+import os
+import json
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
+def process_handbook(user):
+    from f3_memory_management import status_memory, update_memory
+    with open("context.txt", "r") as context_file:
+        context = context_file.read()
+
+    with open("handbook.json", "r") as handbook_file:
+        handbook_data = json.load(handbook_file)
+
+    handbook_data["context"] = context
+    handbook_data["user"] = user
+
+    handbook_data["prompt"] = context + ". ¬ " + user
+
+
+    with open("handbook.json", "w") as handbook_file:
+        json.dump(handbook_data, handbook_file)
+
+    
+    print("\nHandbook processed")
+    target = ["status","objective"]
+    update_memory(target) # update status
+    
+    return status_memory
+
+def read_handbook(variable):
+    with open("handbook.json", "r") as file:
+        variable_data = json.load(file)
+    
+    variable = variable_data[variable]
+    return variable
+
+
+
+
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f3_memory_management.py
+==========
+import json
+import sys
+import os
+import json
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
+def status_memory():
+    status = json.load(open("memory.json"))["status"]
+
+    if status == "inactive": # unused?
+        from f2_handbook_management import process_handbook
+        return process_handbook()
+
+    elif status == "objective":
+        from f4_trajectory_and_actions import objective
+        return objective()
+
+    elif status == "dossier":
+        from core.f4_trajectory_and_actions import dossier
+        return dossier()
+        
+    
+    elif status == "gpt_instructions":
+        from core.f6_user_interaction import gpt_instructions
+        return print("Halt") #gpt_instructions()  # function / template
+
+    elif status == "terminal_instructions":
+        from core.f6_user_interaction import terminal_instructions
+        return terminal_instructions()  # function / template
+
+    elif status == "display_work":
+        from core.f6_user_interaction import display_work
+        return display_work()
+    
+    elif status == "user_feedback":
+        from core.f6_user_interaction import user_feedback
+        return user_feedback()    
+
+    elif status == "execute_work":
+        from core.f4_trajectory_and_actions import execute_work
+        return execute_work()
+
+    elif status == "modify_work":
+        from core.f4_trajectory_and_actions import modify_work
+        return modify_work()
+    
+    elif status == "archive_memory":
+        return archive_memory()
+
+    elif status == "execute_memory":
+        return execute_memory()
+
+
+def update_memory(target):
+    with open("memory.json", "r") as file:
+        memory_data = json.load(file)
+    memory_data[target[0]] = target[1]
+    with open("memory.json", "w") as file:
+        json.dump(memory_data, file)    
+
+    print("\nMemory updated: ", target)
+    return status_memory()
+
+def read_memory(variable):
+    with open("memory.json", "r") as file:
+        memory_data = json.load(file)
+    memory = memory_data[variable]
+    return memory
+
+
+def archive_memory():
+    print("Do you want to save or discard memory.json? (s/d)")
+    user_input = input("Choice: ")
+    if user_input == "s":
+        history = json.load(open("history.json"))
+        current_memory = json.load(open("memory.json"))
+        history.append(current_memory)
+        json.dump(history, open("history.json", "w"))
+        print("Current memory.json saved in history.json.")        
+
+    elif user_input == "d":
+        print("Current memory.json discarded.")
+        
+    memory = {
+        "status":"inactive",
+        "objective":"",
+        "theory":"",
+        "theory_dossier":"",
+        "theory_assessment":"",
+        "theory_delegation":"",
+        "theory_scripts_gpt":"",
+        "theory_scripts_terminal":"",
+        "display_work":"",
+        "apply_theory":"",
+        "modify":"",
+        "modify_theory":"",
+        "archive_memory":"",
+        "execute_old_memory":"" 
+        }
+    json.dump(memory, open("memory.json", "w"))        
+    return print ("memory archived")
+
+def execute_memory():
+    print("Executing an old memory...")
+    # pass memory to memory.json
+    # set status to memory.json
+    return status_memory()
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f4_trajectory_and_actions.py
+==========
+import json
+import sys
+import os
+import json
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+from f3_memory_management import status_memory, update_memory
+
+def objective():
+    from core.f5_gpt_interpreter import gpt4_api
+    from core.f2_handbook_management import read_handbook
+    
+    # craft the prompt to send to gpt api
+    handbook_prompt = read_handbook("prompt")
+    prefix="Please find the objective of this task:\n" # template
+    suffix="\nStart your reply with 'The objective of this query is'" # check how formatting influences output
+    api_prompt = (prefix + " " + handbook_prompt + suffix)
+    print("\nFull prompt to send to api:\n ",api_prompt)
+    gpt4_answer = gpt4_api(api_prompt)
+
+    # fill memory.json objective value with gpt4 answer
+    target = ["objective",gpt4_answer]
+    with open("memory.json", "r") as file:
+        memory_data = json.load(file)
+    memory_data[target[0]] = target[1]
+    with open("memory.json", "w") as file:
+        json.dump(memory_data, file)    
+    print("\nMemory updated: ", target)
+
+    # update memory.json status to dossier
+    target = ["status","dossier"]
+    update_memory(target) # update status
+    
+    return status_memory() 
+
+def dossier():
+    from f3_memory_management import status_memory
+    from f5_gpt_interpreter import gpt4_api
+    # craft the prompt to send to gpt api
+    memory_dossier = json.load(open("memory.json"))["objective"]
+    memory_dossier_str = json.dumps(memory_dossier) 
+    #??? content? dossier_str = memory_data["dossier"]["content"]
+    prefix="""Please make a plan dossier for the objective. 
+The purpose of this dossier is to use the power of gpt4 and the computer terminal if one of these two are needed.
+The dossier must contain to lists, one for openAI gpt calls and one for computer terminal commands. 
+Objective:
+"""
+    suffix="""Please answer in this format:
+
+GPT messages to send
+1.
+2.
+...
+
+Terminal commands for windows 11
+1.
+2.
+...'""" # check how formatting influences output
+    api_prompt = (prefix + memory_dossier_str + "\n" + suffix )
+    print("\nFull prompt to send to api:\n ",api_prompt)
+    gpt4_answer = gpt4_api(api_prompt)
+
+    # fill memory.json dossier value with gpt4 answer
+    target = ["dossier",gpt4_answer]
+    with open("memory.json", "r") as file:
+        memory_data = json.load(file)
+    memory_data[target[0]] = target[1]
+    with open("memory.json", "w") as file:
+        json.dump(memory_data, file)    
+    print("\nMemory updated: ", target)
+
+    # update memory.json status to 
+    target = ["status","-"]
+    update_memory(target) # update status
+    return exit()
+
+
+#########################################################
+
+def execute_work():
+    from f3_memory_management import status_memory
+    memory = json.load(open("memory.json"))["apply_theory"]
+    # Output and actions to apply_theory#
+    # actions in theory do them
+    return status_memory()
+
+def modify_work():
+    from f1_pilot import initialize_system
+    from f3_memory_management import status_memory
+    print("Execution halted, open 'memory.json' and apply changes. Write 'continue' to proceed or 'reboot' to start over.")
+    user_input = input("Action: ")
+    if user_input == "continue":
+        print("Continuing...")
+        memory = {"status": "display_work"}
+        json.dump(memory, open("memory.json", "w"))
+        return status_memory()
+    
+    elif user_input == "reboot":
+        print("Rebooting...")
+        memory = {"status": "inactive"}
+        json.dump(memory, open("memory.json", "w"))        
+        return initialize_system()
+    
+    else:
+        print("Invalid choice. Exiting...")
+        return
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f5_gpt_interpreter.py
+==========
+import json
+import sys
+import os
+import json
+import os
+import openai
+from dotenv import load_dotenv
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+def handbook_system():
+    with open("handbook.json", "r") as file:
+        handbook_data = json.load(file)
+    
+    system_data = handbook_data["system"]
+    print("\nhandbook_system:",system_data)
+    return system_data
+
+
+def gpt4_api(x):
+    # Make the OpenAI API call to get the response using GPT-4
+    # handle if situations to change the prompt to send to gpt4 besed on which value is "status" from memory.json
+    h_system = handbook_system()
+    completion = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": h_system},
+        {"role": "user", "content": x}
+    ]
+    )
+
+
+    return completion.choices[0].message
+
+
+
+
+
+
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f6_user_interaction.py
+==========
+import json
+import sys
+import os
+import json
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+from f3_memory_management import status_memory
+def display_work():
+    print("Do you want to see everything or theory_delegation? (all/td)")
+    user_input = input("Choice: ")
+    if user_input == "all":
+        memory = json.load(open("memory.json"))
+        print(memory)
+    elif user_input == "td":
+        memory = json.load(open("memory.json"))
+        print(memory["theory_scripts_terminal"] + memory["theory_scripts_gpt"])
+    return user_feedback()
+
+def user_feedback():
+    
+    print("Apply theory or modify something? (apply/modify)")
+    user_input = input("Choice: ")
+    if user_input == "apply":
+        memory = {"status": "apply_theory"}
+        json.dump(memory, open("memory.json", "w"))
+        return status_memory()
+
+    elif user_input == "modify":
+        memory = {"status": "modify_theory"}
+        json.dump(memory, open("memory.json", "w"))
+        return status_memory()
+
+==========
+File: c:\Users\ayoub\Desktop\Thalis\features\query\query_plugins\query_core\f7_terminal_execution.py
+==========
+import json
+import sys
+import os
+import json
+from f3_memory_management import status_memory
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+def pilot_terminal():
+    # Execute terminal actions on the computer
+    # read the scripts from memory.json and execute them
+    return status_memory()
